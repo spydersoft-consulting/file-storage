@@ -6,7 +6,6 @@
 		<Authors>Matt Gerega</Authors>
 		<Company>Spydersoft Consulting</Company>
 		<RepositoryUrl>https://github.com/spydersoft-consulting/file-storage</RepositoryUrl>
-		<RepositoryType>git</RepositoryType>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 </Project>
