@@ -34,12 +34,10 @@ internal sealed class RetentionPolicyServiceTests
         {
             Id = Guid.NewGuid(),
             DocumentId = documentId,
+            FileId = Guid.NewGuid(),
             VersionNumber = versionNumber,
             Status = DocumentVersionStatus.Confirmed,
-            FileName = $"file-v{versionNumber}.pdf",
-            ContentType = "application/pdf",
-            StorageKey = $"tenant/source/Invoice/entity/{Guid.NewGuid()}/file-v{versionNumber}.pdf",
-            CreatedAt = DateTimeOffset.UtcNow.AddDays(-versionNumber),
+            UploadedAt = DateTimeOffset.UtcNow.AddDays(-versionNumber),
         };
 
     [Test]
@@ -216,12 +214,10 @@ internal sealed class RetentionPolicyServiceTests
         {
             Id = Guid.NewGuid(),
             DocumentId = docId,
+            FileId = Guid.NewGuid(),
             VersionNumber = 4,
             Status = DocumentVersionStatus.Pending,
-            FileName = "file-v4.pdf",
-            ContentType = "application/pdf",
-            StorageKey = "pending-key",
-            CreatedAt = DateTimeOffset.UtcNow,
+            UploadedAt = DateTimeOffset.UtcNow,
         });
 
         // Already-deleted version — should not be re-processed
@@ -229,13 +225,11 @@ internal sealed class RetentionPolicyServiceTests
         {
             Id = Guid.NewGuid(),
             DocumentId = docId,
+            FileId = Guid.NewGuid(),
             VersionNumber = 1,
             Status = DocumentVersionStatus.Deleted,
             IsDeleted = true,
-            FileName = "file-v1.pdf",
-            ContentType = "application/pdf",
-            StorageKey = "deleted-key",
-            CreatedAt = DateTimeOffset.UtcNow.AddDays(-10),
+            UploadedAt = DateTimeOffset.UtcNow.AddDays(-10),
         });
 
         await db.SaveChangesAsync();

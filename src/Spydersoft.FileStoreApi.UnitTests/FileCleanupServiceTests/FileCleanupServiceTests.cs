@@ -98,7 +98,7 @@ internal sealed class FileCleanupServiceTests
     {
         var dbOptions = CreateDbOptions(Guid.NewGuid().ToString());
         var storage = Substitute.For<IStorageClient>();
-        storage.ExistsAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(true);
+        storage.ObjectExistsAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(true);
 
         var expiredFile = CreatePendingExpiredFile();
         using (var db = OpenDb(dbOptions))
@@ -116,7 +116,7 @@ internal sealed class FileCleanupServiceTests
         var file = await assertDb.Files.AsNoTracking().FirstAsync(f => f.Id == expiredFile.Id);
         Assert.That(file.IsDeleted, Is.True);
         Assert.That(file.Status, Is.EqualTo(FileStatus.Deleted));
-        await storage.Received(1).DeleteAsync(expiredFile.StorageKey, Arg.Any<CancellationToken>());
+        await storage.Received(1).DeleteObjectAsync(expiredFile.StorageKey, Arg.Any<CancellationToken>());
     }
 
     [Test]
@@ -141,7 +141,7 @@ internal sealed class FileCleanupServiceTests
         var file = await assertDb.Files.AsNoTracking().FirstAsync(f => f.Id == confirmedFile.Id);
         Assert.That(file.IsDeleted, Is.False);
         Assert.That(file.Status, Is.EqualTo(FileStatus.Confirmed));
-        await storage.DidNotReceive().DeleteAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await storage.DidNotReceive().DeleteObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
     [Test]
@@ -166,7 +166,7 @@ internal sealed class FileCleanupServiceTests
         var file = await assertDb.Files.AsNoTracking().FirstAsync(f => f.Id == pendingFile.Id);
         Assert.That(file.IsDeleted, Is.False);
         Assert.That(file.Status, Is.EqualTo(FileStatus.Pending));
-        await storage.DidNotReceive().DeleteAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await storage.DidNotReceive().DeleteObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
     [Test]
@@ -175,7 +175,7 @@ internal sealed class FileCleanupServiceTests
         var dbOptions = CreateDbOptions(Guid.NewGuid().ToString());
         var storage = Substitute.For<IStorageClient>();
         // Storage doesn't have the file (upload never completed)
-        storage.ExistsAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(false);
+        storage.ObjectExistsAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(false);
 
         var expiredFile = CreatePendingExpiredFile();
         using (var db = OpenDb(dbOptions))
@@ -194,7 +194,7 @@ internal sealed class FileCleanupServiceTests
         Assert.That(file.IsDeleted, Is.True);
         Assert.That(file.Status, Is.EqualTo(FileStatus.Deleted));
         // DeleteAsync should NOT be called when file doesn't exist in storage
-        await storage.DidNotReceive().DeleteAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await storage.DidNotReceive().DeleteObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
     [Test]
@@ -202,7 +202,7 @@ internal sealed class FileCleanupServiceTests
     {
         var dbOptions = CreateDbOptions(Guid.NewGuid().ToString());
         var storage = Substitute.For<IStorageClient>();
-        storage.ExistsAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(true);
+        storage.ObjectExistsAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(true);
 
         var expiredFile = CreatePendingExpiredFile();
         var confirmedFile = CreateConfirmedFile();
@@ -228,6 +228,6 @@ internal sealed class FileCleanupServiceTests
         Assert.That(confirmed.IsDeleted, Is.False, "Confirmed file should not be deleted");
         Assert.That(nonExpired.IsDeleted, Is.False, "Non-expired pending file should not be deleted");
 
-        await storage.Received(1).DeleteAsync(expiredFile.StorageKey, Arg.Any<CancellationToken>());
+        await storage.Received(1).DeleteObjectAsync(expiredFile.StorageKey, Arg.Any<CancellationToken>());
     }
 }

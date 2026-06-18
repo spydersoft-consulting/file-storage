@@ -42,7 +42,7 @@ public sealed class FileStoreHttpClient : IFileStoreClient
         return await response.Content.ReadFromJsonAsync<FileDto>(cancellationToken);
     }
 
-    public async Task<FileUrlResponse> GetDownloadUrlAsync(Guid fileId, CancellationToken cancellationToken = default)
+    public async Task<FileUrlResponse> GetFileUrlAsync(Guid fileId, CancellationToken cancellationToken = default)
     {
         var response = await _http.GetFromJsonAsync<FileUrlResponse>($"/api/v1/filestore/{fileId}/url", cancellationToken);
         return response!;

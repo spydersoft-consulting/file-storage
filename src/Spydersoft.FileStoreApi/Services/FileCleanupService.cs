@@ -43,9 +43,9 @@ public sealed class FileCleanupService(
 
             try
             {
-                if (await storage.ExistsAsync(file.StorageKey, cancellationToken))
+                if (await storage.ObjectExistsAsync(file.StorageKey, cancellationToken))
                 {
-                    await storage.DeleteAsync(file.StorageKey, cancellationToken);
+                    await storage.DeleteObjectAsync(file.StorageKey, cancellationToken);
                 }
             }
             catch (Exception ex)

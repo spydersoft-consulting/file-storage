@@ -11,26 +11,22 @@ public sealed class InitiateUploadTests
     [Test]
     public async Task InitiateUpload_ReturnsResponse_WhenSuccessful()
     {
-        var expectedResponse = new InitiateUploadResponse
-        {
-            FileId = Guid.NewGuid(),
-            UploadUrl = "https://storage.example.com/presigned",
-            UploadExpiresAt = DateTimeOffset.UtcNow.AddMinutes(15),
-        };
+        var expectedResponse = new InitiateUploadResponse(
+            Guid.NewGuid(),
+            "https://storage.example.com/presigned",
+            DateTimeOffset.UtcNow.AddMinutes(15));
 
         var handler = new MockHttpMessageHandler(HttpStatusCode.OK, JsonContent.Create(expectedResponse));
         var httpClient = new HttpClient(handler) { BaseAddress = new Uri("http://localhost") };
         var client = new FileStoreHttpClient(httpClient);
 
-        var request = new InitiateUploadRequest
-        {
-            Source = "pitstop",
-            EntityType = "maintenancelog",
-            EntityId = "123",
-            FileName = "invoice.pdf",
-            ContentType = "application/pdf",
-            SizeBytes = 1024,
-        };
+        var request = new InitiateUploadRequest(
+            "pitstop",
+            "maintenancelog",
+            "123",
+            "invoice.pdf",
+            "application/pdf",
+            1024);
 
         var result = await client.InitiateUploadAsync(request);
 
