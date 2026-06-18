@@ -1,15 +1,17 @@
-# Build outputs
+## .NET
 bin/
 obj/
-
-# User-specific files
 *.user
-*.suo
 .vs/
+*.suo
+.idea/
+*.swp
 
-# NuGet
+## NuGet
 *.nupkg
-packages/
+*.snupkg
+.nuget/
 
-# dotnet secrets
-secrets.json
+## Test results
+TestResults/
+coverage/

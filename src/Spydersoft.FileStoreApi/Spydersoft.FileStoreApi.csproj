@@ -3,4 +3,15 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+		<PackageReference Include="AWSSDK.S3" Version="3.7.400.5" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Spydersoft.FileStore.Contracts\Spydersoft.FileStore.Contracts.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<InternalsVisibleTo Include="Spydersoft.FileStoreApi.UnitTests" />
+	</ItemGroup>
 </Project>
