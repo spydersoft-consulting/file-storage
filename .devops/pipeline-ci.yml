@@ -1,0 +1,94 @@
+## Build Pipeline — Spydersoft.FileStore
+##
+## Single pipeline for all CI concerns:
+##   PRs / main pushes  →  build + test + SonarCloud (no Docker, no NuGet push)
+##   feature branches   →  build + test + Docker image + NuGet pack/push (no Sonar)
+##   tags               →  build + test + Docker image + NuGet pack/push (no Sonar)
+
+trigger:
+  tags:
+    include:
+      - "*"
+  branches:
+    include:
+      - main
+      - feature/*
+  paths:
+    exclude:
+      - README.md
+      - docs/*
+      - scripts/*
+
+pr:
+  - main
+
+resources:
+  repositories:
+    - repository: templates
+      type: github
+      endpoint: spydersoft-gh
+      name: spydersoft-consulting/azure-devops-templates
+    - repository: helmfileconfig
+      type: github
+      endpoint: spydersoft-gh
+      name: spydersoft-consulting/platform-helm-config
+
+variables:
+  - group: nuget-spydersoft-github
+
+stages:
+  - template: pipelines/build-multi-container/v1.yml@templates
+    parameters:
+      gitVersionSpec: "6.0.x"
+      buildProject: src/Spydersoft.FileStore.slnx
+      netCoreVersion: "10.0.x"
+      externalFeedCredentials: SpydersoftGithub
+      containerRegistryName: github-spydersoft-docker
+      helmfileRepoName: helmfileconfig
+
+      publishProjects:
+        - name: fileStoreApi
+          project: src/Spydersoft.FileStoreApi/Spydersoft.FileStoreApi.csproj
+          artifactName: fileStoreApi
+
+      dockerImages:
+        - name: filestore_api
+          dockerImageName: spydersoft-consulting/filestore-api
+          artifactName: fileStoreApi
+          artifactZipName: Spydersoft.FileStoreApi
+          dockerFilePath: Dockerfile.api
+          imageTagVariableName: filestore_api
+
+      helmTagsCollection: "filestore_api=$(build.buildnumber)"
+
+      executeTests: true
+      testProjects: "**/*.UnitTests.csproj"
+
+      # NuGet packages: Client + Contracts only; exclude AppHost, API, TokenGenerator, and test projects.
+      projectsToPack: "**/*.csproj;!**/*.UnitTests.csproj;!**/*.AppHost.csproj;!**/Spydersoft.FileStoreApi.csproj;!**/Spydersoft.FileStore.TokenGenerator.csproj"
+      externalPublishUrl: $(nuget-feed-url)
+      externalPublishApiKey: $(nuget-feed-api-key)
+
+      sonarEndpointName: sonarcloud-spydersoft
+      sonarProjectKey: spydersoft-consulting_filestore
+      sonarProjectName: Spydersoft.FileStore
+      sonarCloudOrganization: spydersoft-consulting
+      sonarExtraProperties: |
+        sonar.projectKey=spydersoft-consulting_filestore
+        sonar.test.inclusions=**/*.UnitTests/**
+        sonar.coverage.exclusions=**/*.UnitTests/**,**/*.AppHost/**,**/Generated/**
+        sonar.exclusions=**/Generated/**
+        sonar.scanner.scanAll=false
+
+      ${{ if or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranchName'], 'main')) }}:
+        updateHelmConfig: false
+        buildAndPublishDockerImages: false
+        publishToNuget: false
+        executeSonar: true
+        useSonarCloud: true
+      ${{ else }}:
+        updateHelmConfig: true
+        buildAndPublishDockerImages: true
+        publishToNuget: true
+        executeSonar: false
+        useSonarCloud: false

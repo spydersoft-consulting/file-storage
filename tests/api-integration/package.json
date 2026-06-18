@@ -1,0 +1,15 @@
+{
+  "name": "filestore-api-integration",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0"
+  },
+  "packageManager": "yarn@4.17.0"
+}

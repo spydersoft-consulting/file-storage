@@ -224,6 +224,8 @@ internal static class DocumentEndpoints
 
         document.CurrentVersionId = version.Id;
 
+        // Save first so retention policy sees the new version as confirmed in the DB.
+        await db.SaveChangesAsync(cancellationToken);
         await retention.ApplyAsync(document, cancellationToken);
         await db.SaveChangesAsync(cancellationToken);
 
