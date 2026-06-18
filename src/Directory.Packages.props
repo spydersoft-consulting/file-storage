@@ -22,7 +22,15 @@
 		<PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.7" />
 		<PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7" />
 		<PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.7" />
+		<!-- Pin transitive to resolve MSB3277: Npgsql brings 10.0.0, EF Core brings 10.0.7 -->
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.7" />
 		<PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Transitive security pins -->
+		<!-- MessagePack 2.5.192 has GHSA-hv8m-jj95-wg3x; 2.5.198 is the fix -->
+		<PackageVersion Include="MessagePack" Version="2.5.302" />
 	</ItemGroup>
 
 	<ItemGroup>
