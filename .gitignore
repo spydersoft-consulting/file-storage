@@ -2,14 +2,14 @@
 bin/
 obj/
 
-# NuGet packages
-*.nupkg
-*.snupkg
-
-# VS/Rider
-.vs/
-.idea/
+# User-specific files
 *.user
+*.suo
+.vs/
 
-# Logs
-*.log
+# NuGet
+*.nupkg
+packages/
+
+# dotnet secrets
+secrets.json
