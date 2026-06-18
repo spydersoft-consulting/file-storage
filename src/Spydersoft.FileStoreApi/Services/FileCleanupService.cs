@@ -1,66 +1,59 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Spydersoft.FileStore.Contracts;
 using Spydersoft.FileStoreApi.Infrastructure.Data;
 using Spydersoft.FileStoreApi.Infrastructure.Storage;
 
 namespace Spydersoft.FileStoreApi.Services;
 
-public sealed class FileCleanupService : BackgroundService
+public sealed class FileCleanupService(
+    IServiceScopeFactory scopeFactory,
+    ILogger<FileCleanupService> logger) : BackgroundService
 {
-    private static readonly TimeSpan Interval = TimeSpan.FromMinutes(5);
-    private readonly IServiceScopeFactory _scopeFactory;
-    private readonly ILogger<FileCleanupService> _logger;
-
-    public FileCleanupService(IServiceScopeFactory scopeFactory, ILogger<FileCleanupService> logger)
-    {
-        _scopeFactory = scopeFactory;
-        _logger = logger;
-    }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("FileCleanupService starting");
         while (!stoppingToken.IsCancellationRequested)
         {
-            await Task.Delay(Interval, stoppingToken);
             await RunCleanupAsync(stoppingToken);
+            await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
         }
     }
 
-    private async Task RunCleanupAsync(CancellationToken cancellationToken)
+    public async Task RunCleanupAsync(CancellationToken cancellationToken = default)
     {
-        try
+        using var scope = scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<FileStoreDbContext>();
+        var storage = scope.ServiceProvider.GetRequiredService<IStorageClient>();
+
+        var expiredFiles = await db.Files
+            .Where(f => f.Status == FileStatus.Pending
+                     && f.UploadExpiresAt < DateTimeOffset.UtcNow
+                     && !f.IsDeleted)
+            .ToListAsync(cancellationToken);
+
+        foreach (var file in expiredFiles)
         {
-            using var scope = _scopeFactory.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<FileStoreDbContext>();
-            var storage = scope.ServiceProvider.GetRequiredService<IStorageClient>();
+            // Mark deleted in the DB regardless of whether the storage deletion
+            // succeeds, to prevent infinite retries on transient storage errors.
+            // A storage orphan is preferable to a stuck-Pending file.
+            file.IsDeleted = true;
+            file.Status = FileStatus.Deleted;
 
-            var expired = await db.Files
-                .Where(f => f.Status == FileStatus.Pending && f.UploadExpiresAt < DateTimeOffset.UtcNow && !f.IsDeleted)
-                .ToListAsync(cancellationToken);
-
-            foreach (var file in expired)
+            try
             {
-                try
+                if (await storage.ExistsAsync(file.StorageKey, cancellationToken))
                 {
-                    await storage.DeleteObjectAsync(file.StorageKey, cancellationToken);
+                    await storage.DeleteAsync(file.StorageKey, cancellationToken);
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogWarning(ex, "Failed to delete storage object {StorageKey}", file.StorageKey);
-                }
-                db.Files.Remove(file);
             }
-
-            if (expired.Count > 0)
+            catch (Exception ex)
             {
-                await db.SaveChangesAsync(cancellationToken);
-                _logger.LogInformation("Cleaned up {Count} expired pending files", expired.Count);
+                logger.LogError(ex, "Failed to delete storage object for expired file {FileId} — DB record marked deleted; storage object may be orphaned", file.Id);
             }
         }
-        catch (Exception ex) when (ex is not OperationCanceledException)
-        {
-            _logger.LogError(ex, "Error during file cleanup");
-        }
+
+        await db.SaveChangesAsync(cancellationToken);
     }
 }
