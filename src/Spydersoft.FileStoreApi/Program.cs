@@ -56,6 +56,7 @@ builder.Services.AddSingleton<IStorageClient, S3StorageClient>();
 builder.Services.AddScoped<AuditEventService>();
 builder.Services.AddScoped<RetentionPolicyService>();
 
+builder.Services.AddControllers();
 builder.Services.AddFileStoreOpenApi();
 
 var app = builder.Build();
@@ -94,8 +95,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapFileStoreEndpoints();
-app.MapDocumentEndpoints();
+app.MapControllers();
 
 if (app.Environment.IsEnvironment("Testing"))
 {
