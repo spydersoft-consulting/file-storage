@@ -6,7 +6,7 @@ public sealed record CreateDocumentRequest
     public string EntityType { get; init; } = string.Empty;
     public string EntityId { get; init; } = string.Empty;
     public string Name { get; init; } = string.Empty;
-    public RetentionPolicy RetentionPolicy { get; init; } = RetentionPolicy.KeepAll;
+    public RetentionPolicy RetentionPolicy { get; init; }
     public int? RetentionCount { get; init; }
     public string FileName { get; init; } = string.Empty;
     public string ContentType { get; init; } = string.Empty;

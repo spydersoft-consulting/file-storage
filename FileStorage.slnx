@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Spydersoft.FileStore.Client.UnitTests/Spydersoft.FileStore.Client.UnitTests.csproj" />
+    <Project Path="src/Spydersoft.FileStore.Client/Spydersoft.FileStore.Client.csproj" />
+    <Project Path="src/Spydersoft.FileStore.Contracts/Spydersoft.FileStore.Contracts.csproj" />
+  </Folder>
+</Solution>
