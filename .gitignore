@@ -1,0 +1,36 @@
+# Build outputs
+bin/
+obj/
+*.user
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.suo
+*.sln.docstache
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Aspire
+.aspire/
+
+# EF Core migrations (keep the folder, not the snapshots sometimes)
+# Leave migrations tracked
+
+# Secrets
+**/appsettings.*.json
+!**/appsettings.json
+!**/appsettings.Development.json
+
+# Test results
+TestResults/
+coverage/

@@ -1,0 +1,44 @@
+<Project>
+	<PropertyGroup>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+		<CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+	</PropertyGroup>
+	<ItemGroup>
+		<!-- Spydersoft Platform -->
+		<PackageVersion Include="Spydersoft.Platform.Hosting" Version="3.0.0" />
+		<PackageVersion Include="Spydersoft.Messaging" Version="3.0.0" />
+		<PackageVersion Include="Spydersoft.Messaging.RabbitMQ" Version="3.0.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<!-- ASP.NET Core -->
+		<PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0" />
+		<PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<!-- Entity Framework Core -->
+		<PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0" />
+		<PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<!-- AWS SDK -->
+		<PackageVersion Include="AWSSDK.S3" Version="3.7.400.5" />
+	</ItemGroup>
+	<ItemGroup>
+		<!-- .NET Aspire -->
+		<PackageVersion Include="Aspire.Hosting.AppHost" Version="9.5.0" />
+		<PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.5.0" />
+		<PackageVersion Include="Aspire.Hosting.RabbitMQ" Version="9.5.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<!-- Testing -->
+		<PackageVersion Include="NUnit" Version="4.5.1" />
+		<PackageVersion Include="NUnit3TestAdapter" Version="6.2.0" />
+		<PackageVersion Include="NUnit.Analyzers" Version="4.13.0" />
+		<PackageVersion Include="NSubstitute" Version="5.3.0" />
+		<PackageVersion Include="coverlet.collector" Version="10.0.0" />
+		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
+		<PackageVersion Include="Testcontainers.PostgreSql" Version="4.4.0" />
+		<PackageVersion Include="Testcontainers.Minio" Version="4.4.0" />
+	</ItemGroup>
+</Project>
