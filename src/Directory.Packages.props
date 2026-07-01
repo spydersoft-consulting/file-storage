@@ -12,7 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- ASP.NET Core -->
+		<!-- ASP.NET Core  -->
 		<PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
 		<PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7" />
 	</ItemGroup>
