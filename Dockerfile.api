@@ -1,0 +1,14 @@
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+LABEL org.opencontainers.image.source=https://github.com/spydersoft-consulting/file-storage
+LABEL org.opencontainers.image.description="Spydersoft FileStore API"
+LABEL org.opencontainers.image.licenses=MIT
+
+WORKDIR /app
+COPY . /app
+
+ENV ASPNETCORE_URLS=http://+:8080
+EXPOSE 8080
+
+USER $APP_UID
+
+ENTRYPOINT ["dotnet", "Spydersoft.FileStoreApi.dll"]

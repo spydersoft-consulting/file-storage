@@ -14,5 +14,12 @@ public sealed class FileStoreDbContext(DbContextOptions<FileStoreDbContext> opti
             .HasOne(v => v.Document)
             .WithMany(d => d.Versions)
             .HasForeignKey(v => v.DocumentId);
+
+        modelBuilder.Entity<Document>()
+            .HasOne(d => d.CurrentVersion)
+            .WithMany()
+            .HasForeignKey(d => d.CurrentVersionId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

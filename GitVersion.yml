@@ -1,5 +1,17 @@
-mode: Mainline
-branches: {}
-ignore:
-  sha: []
-merge-message-formats: {}
+workflow: GitHubFlow/v1
+merge-message-formats:
+  pull-request: 'Merge pull request \#(?<PullRequestNumber>\d+) from'
+branches:
+  feature:
+    mode: ContinuousDelivery
+  tags:
+    mode: ManualDeployment
+    label: ''
+    increment: Inherit
+    prevent-increment:
+      when-current-commit-tagged: true
+    source-branches:
+    - main
+    track-merge-message: true
+    regex: ^tags?[/-](?<BranchName>.+)
+    is-main-branch: true

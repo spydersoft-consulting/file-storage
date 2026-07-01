@@ -1,10 +1,9 @@
 <Solution>
-  <Folder Name="/src/">
-    <Project Path="src/Spydersoft.FileStore.Contracts/Spydersoft.FileStore.Contracts.csproj" />
-    <Project Path="src/Spydersoft.FileStore.Client/Spydersoft.FileStore.Client.csproj" />
-    <Project Path="src/Spydersoft.FileStore.Client.UnitTests/Spydersoft.FileStore.Client.UnitTests.csproj" />
-    <Project Path="src/Spydersoft.FileStoreApi/Spydersoft.FileStoreApi.csproj" />
-    <Project Path="src/Spydersoft.FileStoreApi.UnitTests/Spydersoft.FileStoreApi.UnitTests.csproj" />
-    <Project Path="src/Spydersoft.FileStore.AppHost/Spydersoft.FileStore.AppHost.csproj" />
-  </Folder>
+  <Project Path="src/Spydersoft.FileStore.AppHost/Spydersoft.FileStore.AppHost.csproj" />
+  <Project Path="src/Spydersoft.FileStore.Client.UnitTests/Spydersoft.FileStore.Client.UnitTests.csproj" />
+  <Project Path="src/Spydersoft.FileStore.Client/Spydersoft.FileStore.Client.csproj" />
+  <Project Path="src/Spydersoft.FileStore.Contracts/Spydersoft.FileStore.Contracts.csproj" />
+  <Project Path="src/Spydersoft.FileStoreApi.UnitTests/Spydersoft.FileStoreApi.UnitTests.csproj" />
+  <Project Path="src/Spydersoft.FileStoreApi/Spydersoft.FileStoreApi.csproj" />
+  <Project Path="src/Spydersoft.FileStore.TokenGenerator/Spydersoft.FileStore.TokenGenerator.csproj" />
 </Solution>
