@@ -1,9 +1,12 @@
 ## Build Pipeline — Spydersoft.FileStore
 ##
-## Single pipeline for all CI concerns:
-##   PRs / main pushes  →  build + test + SonarCloud (no Docker, no NuGet push)
-##   feature branches   →  build + test + Docker image + NuGet pack/push (no Sonar)
-##   tags               →  build + test + Docker image + NuGet pack/push (no Sonar)
+## Single pipeline for all CI concerns, matching the audit/pitstop/techradar
+## convention:
+##   PRs                →  build + test + SonarCloud only, no publish
+##   main pushes        →  beta build (GitVersion X.Y.Z-beta.<n>) -> publish
+##                          images+chart+NuGet, update helm-config's test env
+##   tags / feature/*   →  release build (unlabeled X.Y.Z, or feature-scoped)
+##                          -> publish images+chart+NuGet, update helm-config
 
 trigger:
   tags:
@@ -59,7 +62,15 @@ stages:
           dockerFilePath: Dockerfile.api
           imageTagVariableName: filestore_api
 
-      helmTagsCollection: "filestore_api=$(build.buildnumber)"
+      helmCharts:
+        - name: filestore-api
+          chartPath: charts/filestore-api
+
+      # filestore_chart_version, not the generic chart_version -- platform-helm-config
+      # hosts multiple independently-versioned OCI-chart apps sharing one flat
+      # imageTags map per environment, so each app needs its own key to avoid
+      # one app's publish overwriting another's chart-version pin.
+      helmTagsCollection: "filestore_api=$(build.buildnumber),filestore_chart_version=$(build.buildnumber)"
 
       executeTests: true
       testProjects: "**/*.UnitTests.csproj"
@@ -80,15 +91,24 @@ stages:
         sonar.exclusions=**/Generated/**
         sonar.scanner.scanAll=false
 
-      ${{ if or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranchName'], 'main')) }}:
+      ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         updateHelmConfig: false
         buildAndPublishDockerImages: false
+        buildAndPublishHelmCharts: false
         publishToNuget: false
+        executeSonar: true
+        useSonarCloud: true
+      ${{ elseif eq(variables['Build.SourceBranchName'], 'main') }}:
+        updateHelmConfig: true
+        buildAndPublishDockerImages: true
+        buildAndPublishHelmCharts: true
+        publishToNuget: true
         executeSonar: true
         useSonarCloud: true
       ${{ else }}:
         updateHelmConfig: true
         buildAndPublishDockerImages: true
+        buildAndPublishHelmCharts: true
         publishToNuget: true
         executeSonar: false
         useSonarCloud: false

@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="Spydersoft.FileStore.AppHost/Spydersoft.FileStore.AppHost.csproj" />
+  <Project Path="Spydersoft.FileStore.Client.UnitTests/Spydersoft.FileStore.Client.UnitTests.csproj" />
+  <Project Path="Spydersoft.FileStore.Client/Spydersoft.FileStore.Client.csproj" />
+  <Project Path="Spydersoft.FileStore.Contracts/Spydersoft.FileStore.Contracts.csproj" />
+  <Project Path="Spydersoft.FileStoreApi.UnitTests/Spydersoft.FileStoreApi.UnitTests.csproj" />
+  <Project Path="Spydersoft.FileStoreApi/Spydersoft.FileStoreApi.csproj" />
+  <Project Path="Spydersoft.FileStore.TokenGenerator/Spydersoft.FileStore.TokenGenerator.csproj" />
+</Solution>
