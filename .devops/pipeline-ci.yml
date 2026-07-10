@@ -6,6 +6,9 @@
 ##   main pushes        →  beta build (GitVersion X.Y.Z-beta.<n>) -> publish
 ##                          images+chart+NuGet, update helm-config's test env
 ##   tags / feature/*   →  release build (unlabeled X.Y.Z, or feature-scoped)
+##
+## (Validation commit: confirms the chart_publish job-name sanitization fix
+## in azure-devops-templates and the SonarCloud main-branch config fix.)
 ##                          -> publish images+chart+NuGet, update helm-config
 
 trigger:
