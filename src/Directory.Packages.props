@@ -6,7 +6,7 @@
 
 	<ItemGroup>
 		<!-- Spydersoft Platform -->
-		<PackageVersion Include="Spydersoft.Platform.Hosting" Version="3.0.0" />
+		<PackageVersion Include="Spydersoft.Platform.Hosting" Version="3.1.0" />
 		<PackageVersion Include="Spydersoft.Messaging" Version="3.0.0" />
 		<PackageVersion Include="Spydersoft.Messaging.RabbitMQ" Version="3.0.0" />
 	</ItemGroup>
