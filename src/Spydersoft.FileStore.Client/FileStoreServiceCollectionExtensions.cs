@@ -7,6 +7,9 @@ namespace Spydersoft.FileStore.Client;
 
 public static class FileStoreServiceCollectionExtensions
 {
+    /// <summary>Name of the plain (unauthenticated) HttpClient used to request client-credentials tokens.</summary>
+    internal const string TokenClientName = "Spydersoft.FileStore.TokenClient";
+
     public static IServiceCollection AddSpydersoftFileStore(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddOptions<FileStoreOptions>()
@@ -20,8 +23,13 @@ public static class FileStoreServiceCollectionExtensions
             http.BaseAddress = new Uri(opts.BaseUrl.TrimEnd('/'));
         };
 
-        services.AddHttpClient<IFileStoreClient, FileStoreHttpClient>(configure);
-        services.AddHttpClient<IDocumentClient, DocumentHttpClient>(configure);
+        services.AddHttpClient(TokenClientName);
+        services.AddTransient<ClientCredentialsTokenHandler>();
+
+        services.AddHttpClient<IFileStoreClient, FileStoreHttpClient>(configure)
+            .AddHttpMessageHandler<ClientCredentialsTokenHandler>();
+        services.AddHttpClient<IDocumentClient, DocumentHttpClient>(configure)
+            .AddHttpMessageHandler<ClientCredentialsTokenHandler>();
 
         return services;
     }

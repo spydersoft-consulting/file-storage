@@ -9,6 +9,7 @@ internal sealed class MockHttpMessageHandler : HttpMessageHandler
     private readonly string? _contentType;
 
     public HttpRequestMessage? LastRequest { get; private set; }
+    public int CallCount { get; private set; }
 
     public MockHttpMessageHandler(HttpStatusCode statusCode, HttpContent? content = null)
     {
@@ -23,6 +24,7 @@ internal sealed class MockHttpMessageHandler : HttpMessageHandler
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         LastRequest = request;
+        CallCount++;
         var response = new HttpResponseMessage(_statusCode);
         if (_contentBytes is not null)
         {
