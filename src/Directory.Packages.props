@@ -45,6 +45,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<!-- OAuth2 client-credentials token acquisition -->
+		<PackageVersion Include="IdentityModel" Version="7.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<!-- .NET Aspire -->
 		<PackageVersion Include="Aspire.Hosting.AppHost" Version="9.5.0" />
 		<PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.5.0" />
