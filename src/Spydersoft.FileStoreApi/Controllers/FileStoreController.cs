@@ -160,5 +160,7 @@ public class FileStoreController(FileStoreDbContext db, IStorageClient storage) 
     private string GetTenantId() =>
         User.FindFirst(ClaimTypes.NameIdentifier)?.Value
         ?? User.FindFirst("sub")?.Value
+        ?? User.FindFirst("client_id")?.Value
+        ?? User.FindFirst("azp")?.Value
         ?? string.Empty;
 }
