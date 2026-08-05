@@ -365,6 +365,8 @@ public class DocumentController(
     private string GetTenantId() =>
         User.FindFirst(ClaimTypes.NameIdentifier)?.Value
         ?? User.FindFirst("sub")?.Value
+        ?? User.FindFirst("client_id")?.Value
+        ?? User.FindFirst("azp")?.Value
         ?? string.Empty;
 
     private static string BuildStorageKey(string tenantId, string source, string entityType, string entityId, Guid fileId, string fileName) =>

@@ -2,7 +2,6 @@ using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Spydersoft.FileStoreApi.Infrastructure.Storage;
@@ -11,12 +10,9 @@ public sealed class S3StorageClient : IStorageClient, IDisposable
 {
     private readonly AmazonS3Client _s3;
     private readonly string _bucketName;
-    private readonly ILogger<S3StorageClient> _logger;
-    private readonly string _accessKey;
 
-    public S3StorageClient(IOptions<StorageOptions> options, ILogger<S3StorageClient> logger)
+    public S3StorageClient(IOptions<StorageOptions> options)
     {
-        _logger = logger;
         // AmazonS3Config.SignatureVersion is a no-op for presigned URLs in this SDK version;
         // GetPreSignedURLAsync falls back to legacy SigV2 (AWSAccessKeyId/Expires/Signature)
         // unless this global flag is set. Garage rejects SigV2 presigned requests outright.
@@ -32,7 +28,6 @@ public sealed class S3StorageClient : IStorageClient, IDisposable
         };
         _s3 = new AmazonS3Client(new BasicAWSCredentials(opts.AccessKey, opts.SecretKey), config);
         _bucketName = opts.BucketName;
-        _accessKey = opts.AccessKey;
     }
 
     public async Task<string> GenerateUploadUrlAsync(string storageKey, string contentType, TimeSpan ttl, CancellationToken cancellationToken = default)
@@ -45,11 +40,7 @@ public sealed class S3StorageClient : IStorageClient, IDisposable
             Expires = DateTime.UtcNow.Add(ttl),
             ContentType = contentType,
         };
-        var url = await _s3.GetPreSignedURLAsync(request);
-        _logger.LogWarning(
-            "DIAG presign: bucket={Bucket} key={Key} contentType=[{ContentType}] (len={Len}) accessKeyLen={AkLen} url={Url}",
-            _bucketName, storageKey, contentType, contentType?.Length, _accessKey?.Length, url);
-        return url;
+        return await _s3.GetPreSignedURLAsync(request);
     }
 
     public async Task<string> GenerateDownloadUrlAsync(string storageKey, TimeSpan ttl, CancellationToken cancellationToken = default)
