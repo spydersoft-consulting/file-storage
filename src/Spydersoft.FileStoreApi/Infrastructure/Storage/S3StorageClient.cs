@@ -13,6 +13,11 @@ public sealed class S3StorageClient : IStorageClient, IDisposable
 
     public S3StorageClient(IOptions<StorageOptions> options)
     {
+        // AmazonS3Config.SignatureVersion is a no-op for presigned URLs in this SDK version;
+        // GetPreSignedURLAsync falls back to legacy SigV2 (AWSAccessKeyId/Expires/Signature)
+        // unless this global flag is set. Garage rejects SigV2 presigned requests outright.
+        AWSConfigsS3.UseSignatureVersion4 = true;
+
         var opts = options.Value;
         var config = new AmazonS3Config
         {
