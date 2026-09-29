@@ -9,7 +9,6 @@
 		<PackageReference Include="NUnit3TestAdapter" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" />
 		<PackageReference Include="NSubstitute" />
-		<PackageReference Include="coverlet.collector" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Spydersoft.FileStore.Client\Spydersoft.FileStore.Client.csproj" />

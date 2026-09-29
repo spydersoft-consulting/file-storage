@@ -7,5 +7,6 @@
 		<Company>Spydersoft Consulting</Company>
 		<RepositoryUrl>https://github.com/spydersoft-consulting/file-storage</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<EnableNUnitRunner>true</EnableNUnitRunner>
 	</PropertyGroup>
 </Project>

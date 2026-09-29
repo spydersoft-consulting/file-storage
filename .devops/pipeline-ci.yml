@@ -78,6 +78,7 @@ stages:
 
       executeTests: true
       testProjects: "**/*.UnitTests.csproj"
+      testRunner: mtp
 
       # NuGet packages: Client + Contracts only; exclude AppHost, API, TokenGenerator, and test projects.
       projectsToPack: "**/*.csproj;!**/*.UnitTests.csproj;!**/*.AppHost.csproj;!**/Spydersoft.FileStoreApi.csproj;!**/Spydersoft.FileStore.TokenGenerator.csproj"
