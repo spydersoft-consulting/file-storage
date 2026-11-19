@@ -29,8 +29,6 @@
 
 	<ItemGroup>
 		<!-- Transitive security pins -->
-		<!-- MessagePack 2.5.192 has GHSA-hv8m-jj95-wg3x; 2.5.198 is the fix -->
-		<PackageVersion Include="MessagePack" Version="2.5.302" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -51,9 +49,9 @@
 
 	<ItemGroup>
 		<!-- .NET Aspire -->
-		<PackageVersion Include="Aspire.Hosting.AppHost" Version="9.5.2" />
-		<PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.5.2" />
-		<PackageVersion Include="Aspire.Hosting.RabbitMQ" Version="9.5.2" />
+		<PackageVersion Include="Aspire.Hosting.AppHost" Version="17.0.0" />
+		<PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="17.0.0" />
+		<PackageVersion Include="Aspire.Hosting.RabbitMQ" Version="17.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
